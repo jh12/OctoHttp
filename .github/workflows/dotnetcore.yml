@@ -19,6 +19,8 @@ jobs:
       run: nuget sources add -name "GPR" -Source https://nuget.pkg.github.com/jh12/index.json -Username jh12 -Password ${{ secrets.GITHUB_TOKEN }}
     - name: Build with dotnet
       run: dotnet build --configuration Release
+    - name: Unit tests
+      run: dotnet test
     - name: Pack
       run: dotnet pack --configuration Release
     - name: Publish nuget      
