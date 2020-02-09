@@ -5,7 +5,7 @@ on: [push]
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
     - uses: actions/checkout@v2
@@ -13,5 +13,13 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.100
+    - name: Setup Nuget.exe
+      uses: nuget/setup-nuget@v1
+    - name: Add GPR Source using nuget.exe
+      run: nuget sources add -name "GPR" -Source https://nuget.pkg.github.com/jh12/index.json -Username jh12 -Password ${{ secrets.GITHUB_TOKEN }}
     - name: Build with dotnet
       run: dotnet build --configuration Release
+    - name: Pack
+      run: dotnet pack --configuration Release
+    - name: Publish nuget      
+      run: nuget push OctoHttp\**\*.nupkg -source "GPR" -SkipDuplicate
